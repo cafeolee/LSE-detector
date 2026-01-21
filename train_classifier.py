@@ -7,13 +7,18 @@ from sklearn.metrics import accuracy_score
 
 import numpy as np
 
-def train_model(force="false"):
-
-    if os.path.exists("model.pickle") and not force:
-        print("Model file found. Training step skipped.")
-        return
+def train_model(force=False):
 
     SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    RESULT_PATH = os.path.join(SCRIPT_DIR, "model.pickle")
+
+    if os.path.exists(RESULT_PATH) and not force:
+        print("Model file found. Training step skipped.")
+        return
+        
+
+    print("Trainning the model...")
+
     P_DATA_PATH = os.path.join(SCRIPT_DIR, "data.pickle")
 
     data_dict = pickle.load(open(P_DATA_PATH, "rb"))
@@ -36,7 +41,8 @@ def train_model(force="false"):
     print(f"Accuracy of the model: {score}")
 
     # Save the model
-    f = open("model.pickle", "wb")
-    pickle.dump({"model": model}, f)
-    f.close()
+    with open(RESULT_PATH, "wb") as f:
+        pickle.dump({"model": model}, f)
+
+    print("Model ready")
 

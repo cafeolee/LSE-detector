@@ -3,13 +3,8 @@ import pickle
 
 import mediapipe as mp
 
-def get_dataset(force="false"):
+def get_dataset(force=False):
 
-    if os.path.exists("data.pickle") and not force:
-        print("Dataset ready. Preprocessing step skipped.")
-        return    
-
-    print("Processing the data... It can take several minutes...")
     # =========================
     # Paths, constants & dicts
     # =========================
@@ -18,12 +13,19 @@ def get_dataset(force="false"):
     DATA_DIR = os.path.join(SCRIPT_DIR, "data")
 
     MP_PATH = os.path.join(SCRIPT_DIR, "hand_landmarker.task")
+    RESULT_PATH = os.path.join(SCRIPT_DIR, "data.pickle")
+
+    if os.path.exists(RESULT_PATH) and not force:
+        print("Dataset ready. Preprocessing step skipped.")
+        return    
 
 
     # =========================
     # Dataset preprocessing
     # =========================    
-
+    
+    print("Processing the data... It can take several minutes...")
+    
     data = []
     labels = []
 
@@ -67,8 +69,7 @@ def get_dataset(force="false"):
                     labels.append(dir_)
 
     # Save de dataset
-    f = open("data.pickle", "wb")
-    pickle.dump({"data": data, "labels": labels}, f)
-    f.close()
+    with open(RESULT_PATH, "wb") as f:
+        pickle.dump({"data": data, "labels": labels}, f)
 
     print("Dataset ready")
