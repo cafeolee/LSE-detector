@@ -5,6 +5,11 @@ import mediapipe as mp
 
 def get_dataset(force="false"):
 
+    if os.path.exists("data.pickle") and not force:
+        print("Dataset ready. Preprocessing step skipped.")
+        return    
+
+    print("Processing the data... It can take several minutes...")
     # =========================
     # Paths, constants & dicts
     # =========================
@@ -15,6 +20,9 @@ def get_dataset(force="false"):
     MP_PATH = os.path.join(SCRIPT_DIR, "hand_landmarker.task")
 
 
+    # =========================
+    # Dataset preprocessing
+    # =========================    
 
     data = []
     labels = []
@@ -24,11 +32,6 @@ def get_dataset(force="false"):
     HandLandmarker = mp.tasks.vision.HandLandmarker
     HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
     VisionRunningMode = mp.tasks.vision.RunningMode
-
-
-    # =========================
-    # Dataset preprocessing
-    # =========================    
 
     # Create landmarker
     options = HandLandmarkerOptions(
@@ -67,3 +70,5 @@ def get_dataset(force="false"):
     f = open("data.pickle", "wb")
     pickle.dump({"data": data, "labels": labels}, f)
     f.close()
+
+    print("Dataset ready")

@@ -8,7 +8,11 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 
 def train_model(force="false"):
-    
+
+    if os.path.exists("model.pickle") and not force:
+        print("Model file found. Training step skipped.")
+        return
+
     SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
     P_DATA_PATH = os.path.join(SCRIPT_DIR, "data.pickle")
 
